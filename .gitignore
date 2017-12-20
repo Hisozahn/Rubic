@@ -1,5 +1,6 @@
 glad.c
 nbproject/
 include/glad/
-include/KHR
+include/KHR/
+include/stb_image.h
 Rubic
