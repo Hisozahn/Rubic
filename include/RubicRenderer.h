@@ -21,44 +21,16 @@
 
 class RubicRenderer {
 public:
-    RubicRenderer(ShaderProgram& program, const RubicController& rubicController);
+    RubicRenderer(ShaderProgram& cubeShader, const RubicController& rubicController);
     RubicRenderer(const RubicRenderer& orig) = delete;
     void renderScene();
     void operator=(const RubicRenderer& orig) = delete;
     virtual ~RubicRenderer();
 private:
-    std::vector<glm::vec3> cubePositions = {
-        glm::vec3{ 1.0f, 1.0f,  1.0f},
-        glm::vec3{ 0.0f, 1.0f,  1.0f},
-        glm::vec3{ -1.0f, 1.0f,  1.0f},
-        glm::vec3{ 1.0f, 0.0f,  1.0f},
-        glm::vec3{ 0.0f, 0.0f,  1.0f},
-        glm::vec3{ -1.0f, 0.0f,  1.0f},
-        glm::vec3{ 1.0f, -1.0f,  1.0f},
-        glm::vec3{ 0.0f, -1.0f,  1.0f},
-        glm::vec3{ -1.0f, -1.0f,  1.0f},
-        glm::vec3{ 1.0f, 1.0f,  0.0f},
-        glm::vec3{ 0.0f, 1.0f,  0.0f},
-        glm::vec3{ -1.0f, 1.0f,  0.0f},
-        glm::vec3{ 1.0f, 0.0f,  0.0f},
-        glm::vec3{ 0.0f, 0.0f,  0.0f},
-        glm::vec3{ -1.0f, 0.0f,  0.0f},
-        glm::vec3{ 1.0f, -1.0f,  0.0f},
-        glm::vec3{ 0.0f, -1.0f,  0.0f},
-        glm::vec3{ -1.0f, -1.0f,  0.0f},
-        glm::vec3{ 1.0f, 1.0f,  -1.0f},
-        glm::vec3{ 0.0f, 1.0f,  -1.0f},
-        glm::vec3{ -1.0f, 1.0f,  -1.0f},
-        glm::vec3{ 1.0f, 0.0f,  -1.0f},
-        glm::vec3{ 0.0f, 0.0f,  -1.0f},
-        glm::vec3{ -1.0f, 0.0f,  -1.0f},
-        glm::vec3{ 1.0f, -1.0f,  -1.0f},
-        glm::vec3{ 0.0f, -1.0f,  -1.0f},
-        glm::vec3{ -1.0f, -1.0f,  -1.0f}
-    };
     void createVertices();
     void createTextures();
     void createTexture(GLuint* texture, const std::string& path);
+    
     GLuint textureFront;
     GLuint textureRight;
     GLuint textureBack;
@@ -66,10 +38,12 @@ private:
     GLuint textureTop;
     GLuint textureBottom;
     GLuint textureInside;
-    GLuint VAO;
+    
+    GLuint cubeVAO;
+    GLuint lightVAO;
     GLuint VBO;
-    GLuint IBO;
-    ShaderProgram& shader_program;
+    
+    ShaderProgram& cubeShader;
     const RubicController& controller;
 };
 
