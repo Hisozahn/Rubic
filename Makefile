@@ -1,12 +1,16 @@
 TARGET = Rubic
 
-SRC = *.cpp
+SRC = glad.c *.cpp
 
-LIBS = -lGL -lglut -lGLEW -L./Lib
+LIBS = -lGL -lGLU -lglfw3 -lX11 -lXxf86vm -lXrandr -lpthread -lXi -ldl -lXinerama -lXcursor
 
 SHADERS = shaders/*
 
-FLAGS = -Wall -pedantic -Werror -std=c++11
+INCLUDE_FLAGS = -I./include -I/usr/include/ 
+
+INCLUDE = ./include/*
+
+FLAGS = -Wall -pedantic -Werror -std=c++11 $(INCLUDE_FLAGS)
 
 CC = /usr/bin/g++
 
@@ -14,7 +18,7 @@ default: $(TARGET)
 
 all: default
 
-$(TARGET): $(SHADERS)
+$(TARGET): $(SHADERS) $(SRC) $(INCLUDE)
 	$(CC) $(SRC) -o $(TARGET) $(FLAGS) $(LIBS)
 
 run:

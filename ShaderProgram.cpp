@@ -10,9 +10,9 @@
  * 
  * Created on November 12, 2017, 1:06 PM
  */
-#include <GL/glew.h>
-#include <GL/glut.h>
+
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
 #include <map>
 #include <fstream>
@@ -25,12 +25,16 @@
 const std::vector<std::string> ShaderProgram::all_uniform_variables = {"gWorld"};
 ShaderProgram* ShaderProgram::in_use = nullptr;
 
-ShaderProgram::ShaderProgram() {
+ShaderProgram::ShaderProgram(const std::string &directory) {
     program_handler = glCreateProgram();
     
     if (program_handler == 0) {
         throw std::runtime_error{"Error creating shader program"};
     }
+    
+    loadFromDirectory(directory);
+    
+    compileShaders();
 }
 
 void ShaderProgram::addShader(const std::string& pShaderText, GLenum ShaderType) {
@@ -39,12 +43,9 @@ void ShaderProgram::addShader(const std::string& pShaderText, GLenum ShaderType)
     if (ShaderObj == 0) {
         throw std::runtime_error{"Error creating shader type " + std::to_string(ShaderType)};
     }
-
     const GLchar* p[1];
     p[0] = pShaderText.c_str();
-    GLint Lengths[1];
-    Lengths[0]= pShaderText.length();
-    glShaderSource(ShaderObj, 1, p, Lengths);
+    glShaderSource(ShaderObj, 1, p, NULL);
     glCompileShader(ShaderObj);
     GLint success;
     glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &success);
@@ -58,6 +59,8 @@ void ShaderProgram::addShader(const std::string& pShaderText, GLenum ShaderType)
     if (glGetError() != GL_NO_ERROR) {
         throw std::runtime_error{"Error attaching shader type " + std::to_string(ShaderType)};
     }
+    
+    shader_objects.push_back(ShaderObj);
 }
 
 std::string getFileExtension(std::string path) {
@@ -103,8 +106,16 @@ std::string getFileText(std::string path) {
     return file_text;
 }
 
+void ShaderProgram::setFloatMatrix4(const std::string& name, const glm::mat4& value) {
+    glUniformMatrix4fv(glGetUniformLocation(program_handler, name.c_str()), 1, GL_FALSE, &value[0][0]);
+}
 
-void ShaderProgram::loadFromDirectory(std::string path) {
+void ShaderProgram::setInt(const std::string& name, int value) {
+    glUniform1i(glGetUniformLocation(program_handler, name.c_str()), value);
+}
+
+
+void ShaderProgram::loadFromDirectory(const std::string &path) {
     DIR *dir;
     struct dirent *ent;
     if ((dir = opendir (path.c_str())) != NULL) {
@@ -144,11 +155,17 @@ void ShaderProgram::compileShaders() {
         glGetProgramInfoLog(program_handler, sizeof(ErrorLog), NULL, ErrorLog);
         throw std::runtime_error{std::string{"Invalid shader program: "} + ErrorLog};
     }
+    for (GLuint shader : shader_objects) {
+        glDeleteShader(shader);
+    }
+    shader_objects.clear();
 }
 
 void ShaderProgram::useProgram() {
     glUseProgram(program_handler);
-    if (glGetError() != GL_NO_ERROR) {
+    GLenum err = glGetError();
+    if (err != GL_NO_ERROR) {
+        std::cerr << err << std::endl;
         throw std::runtime_error{"Error enabling shader program."};
     }
     in_use = this;
@@ -171,8 +188,8 @@ std::unordered_map<std::string, GLuint> ShaderProgram::getUniformVariables(std::
 
 ShaderProgram::~ShaderProgram() {
     if (in_use == this) {
+        glUseProgram(0);
         in_use = nullptr;
     }
     glDeleteProgram(program_handler);
 }
-

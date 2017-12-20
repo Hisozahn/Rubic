@@ -1,1 +1,0 @@
-/usr/bin/gcc HelloWorld.cpp -o HelloWorld -Wall -pedantic -lGL -lglut -lGLEW
