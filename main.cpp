@@ -63,7 +63,7 @@ int main()
 
     {
         // build and compile our shader program
-        ShaderProgram ourShader("shaders");
+        ShaderProgram ourShader("shaders/cube_shader");
         
         // Setup cube renderer
         RubicRenderer renderer(ourShader, controller);

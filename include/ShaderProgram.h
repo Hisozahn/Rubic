@@ -28,6 +28,8 @@ public:
     void setFloatMatrix4(const std::string& name, const glm::mat4& value);
     void setInt(const std::string& name, int value);
     void setVec3(const std::string& name, float x, float y, float z);
+    void setVec3(const std::string& name, const glm::vec3& value);
+    void setFloat(const std::string &name, float value);
     void useProgram();
     void addShader(const std::string& pShaderText, GLenum ShaderType);
     void loadFromDirectory(const std::string& path);

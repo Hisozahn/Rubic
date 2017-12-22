@@ -1,20 +1,24 @@
 #version 330
 
-layout (location = 0) in vec3 Position;
-layout (location = 1) in vec2 aTexCoord;
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoords;
+layout (location = 2) in vec3 aNormal;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec4 Color;
-out vec2 TexCoord;
+out vec3 FragPos;
 out vec3 Pos;
+out vec3 Normal;
+out vec2 TexCoords;
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(Position, 1.0);
-    Pos = Position;
-    Color = vec4(clamp(Position, 0.0, 1.0), 1.0);
-    TexCoord = aTexCoord;
+    FragPos = vec3(model * vec4(aPos, 1.0));
+    Pos = aPos;
+    Normal = mat3(transpose(inverse(model))) * aNormal;  
+    TexCoords = aTexCoords;
+    
+    gl_Position = projection * view * vec4(FragPos, 1.0);
 }

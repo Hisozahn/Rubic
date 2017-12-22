@@ -18,7 +18,7 @@ default: $(TARGET)
 
 all: default
 
-$(TARGET): $(SHADERS) $(SRC) $(INCLUDE)
+$(TARGET): $(SHADERS) $(SRC) $(INCLUDE) shaders/*/*
 	$(CC) $(SRC) -o $(TARGET) $(FLAGS) $(LIBS)
 
 run:

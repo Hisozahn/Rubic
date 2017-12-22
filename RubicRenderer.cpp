@@ -21,6 +21,8 @@
 
 using namespace glm;
 
+const glm::vec3 RubicRenderer::lightPosition{20.0f, 18.0f, 20.0f};
+
 void RubicRenderer::createTexture(GLuint* texture, const std::string& path) {
     glGenTextures(1, texture);
     glBindTexture(GL_TEXTURE_2D, *texture);
@@ -54,83 +56,83 @@ void RubicRenderer::createTextures() {
 }
 
 void RubicRenderer::createVertices() {
-    glGenVertexArrays(1, &VAO);
+    glGenVertexArrays(1, &cubeVAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &IBO);
     
     float Vertices[] = {
         // Front square
-        -1.0f, -1.0f, 1.0f,    0.0f, 0.0f,
-        1.0f, -1.0f, 1.0f,     1.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+        -1.0f, -1.0f, 1.0f,    0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        1.0f, -1.0f, 1.0f,     1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,     0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
         
-        1.0f, -1.0f, 1.0f,     1.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,      1.0f, 1.0f,
+        1.0f, -1.0f, 1.0f,     1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,     0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,      1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
         // Right-hand square
-        1.0f, -1.0f, 1.0f,     0.0f, 0.0f,
-        1.0f, -1.0f, -1.0f,    1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,      0.0f, 1.0f,
+        1.0f, -1.0f, 1.0f,     0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, -1.0f,    1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,      0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
         
-        1.0f, -1.0f, -1.0f,    1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,      0.0f, 1.0f,
-        1.0f, 1.0f, -1.0f,     1.0f, 1.0f,
+        1.0f, -1.0f, -1.0f,    1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,      0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, -1.0f,     1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
         // Back-side square
-        1.0f, -1.0f, -1.0f,    0.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f,   1.0f, 0.0f,
-        1.0f, 1.0f, -1.0f,     0.0f, 1.0f,
+        1.0f, -1.0f, -1.0f,    0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,   1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+        1.0f, 1.0f, -1.0f,     0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
         
-        -1.0f, -1.0f, -1.0f,   1.0f, 0.0f,
-        1.0f, 1.0f, -1.0f,     0.0f, 1.0f,
-        -1.0f, 1.0f, -1.0f,    1.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,   1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+        1.0f, 1.0f, -1.0f,     0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
+        -1.0f, 1.0f, -1.0f,    1.0f, 1.0f,  0.0f, 0.0f, -1.0f,
         // Left-hand square
-        -1.0f, -1.0f, -1.0f,   0.0f, 0.0f,
-        -1.0f, -1.0f, 1.0f,    1.0f, 0.0f,
-        -1.0f, 1.0f, -1.0f,    0.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,   0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f,    1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, -1.0f,    0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
         
-        -1.0f, -1.0f, 1.0f,    1.0f, 0.0f,
-        -1.0f, 1.0f, -1.0f,    0.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+        -1.0f, -1.0f, 1.0f,    1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, -1.0f,    0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, 1.0f,     1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
         // Top square
-        -1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,      1.0f, 0.0f,
-        1.0f, 1.0f, -1.0f,     1.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,     0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,      1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, -1.0f,     1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
         
-        -1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
-        1.0f, 1.0f, -1.0f,     1.0f, 1.0f,
-        -1.0f, 1.0f, -1.0f,    0.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,     0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, -1.0f,     1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, -1.0f,    0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
         // Bottom square
-        -1.0f, -1.0f, 1.0f,    0.0f, 1.0f,
-        1.0f, -1.0f, 1.0f,     1.0f, 1.0f,
-        1.0f, -1.0f, -1.0f,    1.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f,    0.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 1.0f,     1.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, -1.0f,    1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
         
-        -1.0f, -1.0f, 1.0f,    0.0f, 1.0f,
-        1.0f, -1.0f, -1.0f,    1.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f,   0.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f,    0.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, -1.0f,    1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f,   0.0f, 0.0f,  0.0f, -1.0f, 0.0f
     };
     
-    glBindVertexArray(VAO);
+    glBindVertexArray(cubeVAO);
     
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
     
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 }
 
-RubicRenderer::RubicRenderer(ShaderProgram& program, const RubicController& rubicController)
-    : shader_program{program}, controller{rubicController} {
+RubicRenderer::RubicRenderer(ShaderProgram& cube, const RubicController& rubicController)
+    : cubeShader{cube}, controller{rubicController} {
     createVertices();
     createTextures();
 }
 
 void RubicRenderer::renderScene() {
+    
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureFront);
     glActiveTexture(GL_TEXTURE1);
@@ -146,29 +148,39 @@ void RubicRenderer::renderScene() {
     glActiveTexture(GL_TEXTURE6);
     glBindTexture(GL_TEXTURE_2D, textureInside);
     
-    shader_program.useProgram();
+    cubeShader.useProgram();
     
-    glm::mat4 projection = controller.getProjection(); //glm::perspective(glm::radians(controller.getCamera().GetZoom()), 1.33f, 0.1f, 100.0f);
-    shader_program.setFloatMatrix4("projection", projection);  
+    cubeShader.setVec3("light.position", lightPosition);
+    cubeShader.setVec3("viewPos", controller.getCamera().getPosition());
+    // light properties
+    cubeShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f); 
+    cubeShader.setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
+    cubeShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+    // material properties
+    cubeShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    cubeShader.setFloat("material.shininess", 64.0f);
+    
+    glm::mat4 projection = controller.getProjection();
+    cubeShader.setFloatMatrix4("projection", projection);  
     glm::mat4 view = controller.getCamera().GetViewMatrix();
-    shader_program.setFloatMatrix4("view", view);
+    cubeShader.setFloatMatrix4("view", view);
     
-    glBindVertexArray(VAO);
+    glBindVertexArray(cubeVAO);
     for (glm::mat4 model: controller.getModels()) {
-        shader_program.setFloatMatrix4("model", model);
-        shader_program.setInt("textureFront", 0);
-        shader_program.setInt("textureRight", 1);
-        shader_program.setInt("textureBack", 2);
-        shader_program.setInt("textureLeft", 3);
-        shader_program.setInt("textureTop", 4);
-        shader_program.setInt("textureBottom", 5);
+        cubeShader.setFloatMatrix4("model", model);
+        cubeShader.setInt("textureFront", 0);
+        cubeShader.setInt("textureRight", 1);
+        cubeShader.setInt("textureBack", 2);
+        cubeShader.setInt("textureLeft", 3);
+        cubeShader.setInt("textureTop", 4);
+        cubeShader.setInt("textureBottom", 5);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 }
 
 
 RubicRenderer::~RubicRenderer() {
-    glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &cubeVAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &IBO);
 }

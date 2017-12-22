@@ -114,6 +114,17 @@ void ShaderProgram::setInt(const std::string& name, int value) {
     glUniform1i(glGetUniformLocation(program_handler, name.c_str()), value);
 }
 
+void ShaderProgram::setVec3(const std::string& name, float x, float y, float z) {
+    glUniform3f(glGetUniformLocation(program_handler, name.c_str()), x, y, z);
+}
+
+void ShaderProgram::setVec3(const std::string& name, const glm::vec3& value) {
+    glUniform3fv(glGetUniformLocation(program_handler, name.c_str()), 1, &value[0]);
+}
+
+void ShaderProgram::setFloat(const std::string &name, float value) { 
+    glUniform1f(glGetUniformLocation(program_handler, name.c_str()), value); 
+}
 
 void ShaderProgram::loadFromDirectory(const std::string &path) {
     DIR *dir;
