@@ -15,20 +15,39 @@
 #define RUBICRENDERER_H
 
 #include "ShaderProgram.h"
+#include "RubicController.h"
+#include "Camera.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class RubicRenderer {
 public:
-    RubicRenderer(ShaderProgram* program);
+    RubicRenderer(ShaderProgram& cubeShader, const RubicController& rubicController);
     RubicRenderer(const RubicRenderer& orig) = delete;
     void renderScene();
     void operator=(const RubicRenderer& orig) = delete;
     virtual ~RubicRenderer();
 private:
+    void createVertices();
+    void createTextures();
+    void createTexture(GLuint* texture, const std::string& path);
+    
+    GLuint textureFront;
+    GLuint textureRight;
+    GLuint textureBack;
+    GLuint textureLeft;
+    GLuint textureTop;
+    GLuint textureBottom;
+    GLuint textureInside;
+    
+    GLuint cubeVAO;
+    GLuint lightVAO;
     GLuint VBO;
-    GLuint IBO;
-    std::unordered_map<std::string, GLuint> uniform_variables;
-    ShaderProgram* shader_program;
+    
+    ShaderProgram& cubeShader;
+    const RubicController& controller;
+    
+    static const glm::vec3 lightPosition;
 };
 
 #endif /* RUBICRENDERER_H */
-

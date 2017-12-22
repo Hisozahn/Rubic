@@ -14,8 +14,9 @@
 #ifndef SHADERPROGRAM_H
 #define SHADERPROGRAM_H
 
-#include <GL/glew.h>
-#include <GL/glut.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -24,17 +25,23 @@ class ShaderProgram {
 public:
     static const std::vector<std::string> all_uniform_variables;
     void compileShaders();
+    void setFloatMatrix4(const std::string& name, const glm::mat4& value);
+    void setInt(const std::string& name, int value);
+    void setVec3(const std::string& name, float x, float y, float z);
+    void setVec3(const std::string& name, const glm::vec3& value);
+    void setFloat(const std::string &name, float value);
     void useProgram();
     void addShader(const std::string& pShaderText, GLenum ShaderType);
-    void loadFromDirectory(std::string path);
+    void loadFromDirectory(const std::string& path);
     std::unordered_map<std::string, GLuint> getUniformVariables(std::vector<std::string> names);
     virtual ~ShaderProgram();
     ShaderProgram(const ShaderProgram& orig) = delete;
     void operator=(const ShaderProgram& orig) = delete;
-    ShaderProgram();
+    ShaderProgram(const std::string &directory);
 private:
     GLuint program_handler;
     static ShaderProgram* in_use;
+    std::vector<GLuint> shader_objects;
     enum {
         ERROR_MESSAGE_MAX_LENGTH = 1024
     };
@@ -45,4 +52,3 @@ std::string getFileExtension(std::string path);
 GLuint getShaderType(std::string path);
 
 #endif /* SHADERPROGRAM_H */
-
